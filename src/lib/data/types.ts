@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Activity, LedgerRecord, Recommendation, UserConstraints } from "@/domain/models";
 
 export const SCHEMA_VERSION = 1;
-export const MIGRATION_VERSION = 1;
+
 
 export const UserProfileSchema = z.object({
   uid: z.string(),

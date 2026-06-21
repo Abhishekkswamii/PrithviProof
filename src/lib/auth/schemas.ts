@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const passwordSchema = z
+const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters")
   .regex(/[A-Z]/, "Password must contain an uppercase letter")
@@ -30,7 +30,3 @@ export const signInSchema = z.object({
 export const resetPasswordSchema = z.object({
   email: z.string().trim().email("Enter a valid email address"),
 });
-
-export type SignUpInput = z.infer<typeof signUpSchema>;
-export type SignInInput = z.infer<typeof signInSchema>;
-export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

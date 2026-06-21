@@ -79,7 +79,7 @@ export function AskPrithvi() {
         { role: "ai", text: response.answer, isFallback: response.isFallback },
       ]);
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
       setMessages((prev) => [
         ...prev,
         {

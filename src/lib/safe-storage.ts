@@ -35,7 +35,7 @@ export function loadFromStorage<T>(schema: z.ZodType<T>): T | null {
     if (result.success) {
       return result.data;
     }
-    console.warn("PrithviProof: stored data failed validation, resetting.", result.error.issues);
+    if (import.meta.env.DEV) console.warn("PrithviProof: stored data failed validation, resetting.", result.error.issues);
     window.localStorage.removeItem(STORAGE_KEY);
     return null;
   } catch {

@@ -7,12 +7,12 @@ import type { DataRepository } from "./types";
 let firestoreRepo: FirestoreDataRepository | null = null;
 let localRepo: LocalDataRepository | null = null;
 
-export function getLocalDataRepository(): LocalDataRepository {
+function getLocalDataRepository(): LocalDataRepository {
   if (!localRepo) localRepo = new LocalDataRepository();
   return localRepo;
 }
 
-export function getFirestoreDataRepository(): FirestoreDataRepository {
+function getFirestoreDataRepository(): FirestoreDataRepository {
   if (!firestoreRepo) firestoreRepo = new FirestoreDataRepository();
   return firestoreRepo;
 }

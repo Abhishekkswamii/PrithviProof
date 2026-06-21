@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 //} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import Assessment from "../../src/pages/(app)/assessment/page";
+import Assessment from "../../src/pages/app/AssessmentPage";
 
 const mockMarkQuestionAnswered = vi.fn();
 const mockAddActivity = vi.fn();

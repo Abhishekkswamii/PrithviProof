@@ -113,7 +113,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         loadKey.current = key;
         setStoreError(null);
       } catch (e) {
-        console.error("PrithviProof: failed to load state", e);
+        if (import.meta.env.DEV) console.error("PrithviProof: failed to load state", e);
         if (!cancelled) setStoreError("Could not load saved data. Starting fresh.");
       } finally {
         if (!cancelled) setIsInitialized(true);
@@ -138,7 +138,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
     if (user && isFirebaseConfigured()) {
       void getDataRepository(true).save(user.uid, data).catch((e) => {
-        console.error("PrithviProof: Firestore save failed", e);
+        if (import.meta.env.DEV) console.error("PrithviProof: Firestore save failed", e);
       });
     } else {
       saveToStorage(data);

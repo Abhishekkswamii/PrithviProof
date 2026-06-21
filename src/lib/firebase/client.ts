@@ -95,10 +95,4 @@ async function initAppCheck(firebaseApp: FirebaseApp): Promise<void> {
   }
 }
 
-/** Reset singletons — for tests only */
-export function resetFirebaseClientForTests(): void {
-  app = null;
-  auth = null;
-  db = null;
-  emulatorsConnected = false;
-}
+

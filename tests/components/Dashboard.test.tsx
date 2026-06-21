@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 //} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import Dashboard from "../../src/pages/(app)/dashboard/page";
+import Dashboard from "../../src/pages/app/DashboardPage";
 
 vi.mock("@/data/store", () => ({
   useStore: () => ({

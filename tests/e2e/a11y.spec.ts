@@ -4,18 +4,21 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('Accessibility - Public Routes', () => {
   test('landing page should not have any automatically detectable accessibility issues', async ({ page }) => {
     await page.goto('/');
+    await page.waitForSelector('main');
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
   test('sign-in page should not have any automatically detectable accessibility issues', async ({ page }) => {
     await page.goto('/auth/sign-in');
+    await page.waitForSelector('main');
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
   test('sign-up page should not have any automatically detectable accessibility issues', async ({ page }) => {
     await page.goto('/auth/sign-up');
+    await page.waitForSelector('main');
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
     expect(accessibilityScanResults.violations).toEqual([]);
   });

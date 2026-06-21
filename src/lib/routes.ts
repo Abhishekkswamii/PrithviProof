@@ -1,5 +1,5 @@
 /** Internal application paths users may be redirected to after auth */
-export const PROTECTED_ROUTES = [
+const PROTECTED_ROUTES = [
   "/dashboard",
   "/assessment",
   "/log",
@@ -8,7 +8,7 @@ export const PROTECTED_ROUTES = [
   "/settings",
 ] as const;
 
-export const PUBLIC_ROUTES = [
+const PUBLIC_ROUTES = [
   "/",
   "/auth/sign-in",
   "/auth/sign-up",

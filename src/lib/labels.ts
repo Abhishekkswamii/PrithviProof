@@ -1,4 +1,4 @@
-import { Activity, ActivityCategory } from "@/domain/models";
+import type { Activity, ActivityCategory } from "@/domain/models";
 import { getFactorById } from "@/domain/factors";
 
 const CATEGORY_LABELS: Record<ActivityCategory, string> = {
@@ -23,20 +23,12 @@ const CATEGORY_COLORS: Record<ActivityCategory, string> = {
   waste: "bg-teal",
 };
 
-const CATEGORY_TEXT_COLORS: Record<ActivityCategory, string> = {
-  transport: "text-amber",
-  energy: "text-blue",
-  food: "text-green-700",
-  purchases: "text-coral",
-  waste: "text-teal",
-};
-
 export function getCategoryLabel(category: ActivityCategory | string): string {
   return CATEGORY_LABELS[category as ActivityCategory] ?? category;
 }
 
 export function getActivityLabel(activity: Activity): string {
-  if (ACTIVITY_LABELS[activity.id]) return ACTIVITY_LABELS[activity.id];
+  if (ACTIVITY_LABELS[activity.id]) return ACTIVITY_LABELS[activity.id]!;
   const factor = getFactorById(activity.factorId);
   if (factor) return factor.name;
   return `${getCategoryLabel(activity.categoryId)} activity`;
@@ -44,10 +36,6 @@ export function getActivityLabel(activity: Activity): string {
 
 export function getCategoryColorClass(category: ActivityCategory | string): string {
   return CATEGORY_COLORS[category as ActivityCategory] ?? "bg-green-500";
-}
-
-export function getCategoryTextColorClass(category: ActivityCategory | string): string {
-  return CATEGORY_TEXT_COLORS[category as ActivityCategory] ?? "text-green-700";
 }
 
 export function getHousingLabel(type: string): string {

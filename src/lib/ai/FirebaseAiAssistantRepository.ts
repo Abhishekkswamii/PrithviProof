@@ -45,8 +45,8 @@ export class FirebaseAiAssistantRepository implements AiAssistantRepository {
       systemInstruction: instruction,
       generationConfig: {
         responseMimeType,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        responseSchema: responseSchema as any,
+        // @ts-expect-error: Firebase AI SDK expects its own Schema type but structural typing matches our definition at runtime
+        responseSchema: responseSchema,
         maxOutputTokens: 500, // Bound token generation to avoid expensive runaways
       }
     });
@@ -97,7 +97,7 @@ export class FirebaseAiAssistantRepository implements AiAssistantRepository {
       return ParseActivityResponseSchema.parse(parsed);
 
     } catch (error) {
-      console.warn("Firebase AI parsing failed, falling back to deterministic parser.", error);
+      if (import.meta.env.DEV) console.warn("Firebase AI parsing failed, falling back to deterministic parser.", error);
       return this.fallback.parseActivity(safeText);
     }
   }
@@ -124,7 +124,7 @@ User Prompt: ${safePrompt}`;
         isFallback: false
       };
     } catch (error) {
-      console.warn("Firebase AI assistant failed, falling back.", error);
+      if (import.meta.env.DEV) console.warn("Firebase AI assistant failed, falling back.", error);
       return this.fallback.askAssistant(request);
     }
   }

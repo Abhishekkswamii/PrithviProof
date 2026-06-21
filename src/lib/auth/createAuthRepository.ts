@@ -15,9 +15,4 @@ export function getAuthRepository(): AuthRepository {
   return instance;
 }
 
-/** Replace repository — tests only */
-export function setAuthRepository(repo: AuthRepository | null): void {
-  instance = repo;
-}
 
-export { MockAuthRepository };

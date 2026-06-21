@@ -11,13 +11,13 @@ export const LedgerState = z.enum(["estimated", "planned", "in-progress", "verif
 export type LedgerState = z.infer<typeof LedgerState>;
 
 // --- Provenance & Factors ---
-export const FactorProvenance = z.object({
+const FactorProvenance = z.object({
   sourceName: z.string(),
   year: z.number().int(),
   geography: z.string(),
   url: z.string().url().optional(),
 });
-export type FactorProvenance = z.infer<typeof FactorProvenance>;
+type FactorProvenance = z.infer<typeof FactorProvenance>;
 
 export const EmissionFactor = z.object({
   id: z.string(),

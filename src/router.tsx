@@ -1,27 +1,19 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import LandingPage from './pages/page';
-import MethodologyPage from './pages/methodology/page';
-import SignInPage from './pages/auth/sign-in/page';
-import SignUpPage from './pages/auth/sign-up/page';
-import ResetPasswordPage from './pages/auth/reset-password/page';
-
 import { RouteErrorBoundary } from './components/ErrorBoundary';
 
-const RootLayout = () => {
-  return (
-    <div className="antialiased min-h-screen bg-canvas text-text-primary flex flex-col font-sans">
-      <nav aria-label="Skip links">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-surface focus:z-50 focus:rounded-card"
-        >
-          Skip to main content
-        </a>
-      </nav>
-      <Outlet />
-    </div>
-  );
-};
+const RootLayout = () => (
+  <div className="antialiased min-h-screen bg-canvas text-text-primary flex flex-col font-sans">
+    <nav aria-label="Skip links">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-surface focus:z-50 focus:rounded-card"
+      >
+        Skip to main content
+      </a>
+    </nav>
+    <Outlet />
+  </div>
+);
 
 export const router = createBrowserRouter([
   {
@@ -31,64 +23,64 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <LandingPage />,
+        lazy: async () => ({ Component: (await import('./pages/marketing/LandingPage')).default }),
       },
       {
         path: 'methodology',
-        element: <MethodologyPage />,
+        lazy: async () => ({ Component: (await import('./pages/marketing/MethodologyPage')).default }),
       },
       {
         path: 'auth/sign-in',
-        element: <SignInPage />,
+        lazy: async () => ({ Component: (await import('./pages/auth/SignInPage')).default }),
       },
       {
         path: 'auth/sign-up',
-        element: <SignUpPage />,
+        lazy: async () => ({ Component: (await import('./pages/auth/SignUpPage')).default }),
       },
       {
         path: 'auth/reset-password',
-        element: <ResetPasswordPage />,
+        lazy: async () => ({ Component: (await import('./pages/auth/ResetPasswordPage')).default }),
       },
       {
         lazy: async () => {
-          const { default: Component } = await import('./pages/(app)/layout');
+          const { default: Component } = await import('./pages/app/AppLayout');
           return { Component: () => <Component><Outlet /></Component> };
         },
         children: [
           {
             path: 'dashboard',
-            lazy: async () => ({ Component: (await import('./pages/(app)/dashboard/page')).default }),
+            lazy: async () => ({ Component: (await import('./pages/app/DashboardPage')).default }),
           },
           {
             path: 'assessment',
-            lazy: async () => ({ Component: (await import('./pages/(app)/assessment/page')).default }),
+            lazy: async () => ({ Component: (await import('./pages/app/AssessmentPage')).default }),
           },
           {
             path: 'log',
-            lazy: async () => ({ Component: (await import('./pages/(app)/log/page')).default }),
+            lazy: async () => ({ Component: (await import('./pages/app/ActivityLogPage')).default }),
           },
           {
-            path: 'activities', // Map activities to log
-            lazy: async () => ({ Component: (await import('./pages/(app)/log/page')).default }),
+            path: 'activities',
+            lazy: async () => ({ Component: (await import('./pages/app/ActivityLogPage')).default }),
           },
           {
             path: 'ledger',
-            lazy: async () => ({ Component: (await import('./pages/(app)/ledger/page')).default }),
+            lazy: async () => ({ Component: (await import('./pages/app/LedgerPage')).default }),
           },
           {
             path: 'recommendations',
-            lazy: async () => ({ Component: (await import('./pages/(app)/recommendations/page')).default }),
+            lazy: async () => ({ Component: (await import('./pages/app/RecommendationsPage')).default }),
           },
           {
             path: 'settings',
-            lazy: async () => ({ Component: (await import('./pages/(app)/settings/page')).default }),
+            lazy: async () => ({ Component: (await import('./pages/app/SettingsPage')).default }),
           },
-        ]
+        ],
       },
       {
         path: '*',
-        element: <div className="p-8 text-center"><h1 className="text-2xl font-bold">404 - Not Found</h1></div>
-      }
-    ]
-  }
+        element: <div className="p-8 text-center"><h1 className="text-2xl font-bold">404 - Not Found</h1></div>,
+      },
+    ],
+  },
 ]);
