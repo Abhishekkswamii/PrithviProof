@@ -58,7 +58,32 @@ export const localFactors: EmissionFactor[] = [
       geography: "US",
     }
   },
-  // Food
+  {
+    id: "f-grid-in-avg",
+    category: "energy",
+    name: "Indian Average Grid Electricity",
+    value: 0.71, // kgCO2e per kWh (higher coal mix)
+    unit: "kWh",
+    uncertaintyPercent: 15,
+    provenance: {
+      sourceName: "CEA India",
+      year: 2023,
+      geography: "India",
+    }
+  },
+  {
+    id: "f-scooter-gas",
+    category: "transport",
+    name: "Petrol Two-Wheeler (Scooter)",
+    value: 0.04, // kgCO2e per km
+    unit: "km",
+    uncertaintyPercent: 20,
+    provenance: {
+      sourceName: "India GHG Program",
+      year: 2022,
+      geography: "India",
+    }
+  },
   {
     id: "f-beef",
     category: "food",
