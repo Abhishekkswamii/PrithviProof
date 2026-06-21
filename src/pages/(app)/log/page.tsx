@@ -56,7 +56,8 @@ export default function ActivityLogPage() {
     setStatusMessage(null);
     setPreviewActivity(null);
     try {
-      const response = await getAiRepository().parseActivity(naturalInput);
+      const repo = await getAiRepository();
+      const response = await repo.parseActivity(naturalInput);
       const activity = response.activities[0];
       if (activity) {
         if (activity.clarificationNeeded && activity.clarificationQuestion) {

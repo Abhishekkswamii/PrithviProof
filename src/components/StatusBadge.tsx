@@ -3,9 +3,9 @@ import { LedgerState } from "@/domain/models";
 import { cn } from "@/lib/utils";
 
 const statusConfig: Record<LedgerState, { label: string; className: string }> = {
-  estimated: { label: "Estimated", className: "bg-canvas-subtle text-text-secondary border-border" },
+  estimated: { label: "Estimated", className: "bg-canvas-subtle text-text-primary border-border" },
   planned: { label: "Planned", className: "bg-canvas-subtle text-text-primary border-border" },
-  "in-progress": { label: "In progress", className: "bg-surface border-blue/30 text-blue" },
+  "in-progress": { label: "In progress", className: "bg-surface border-blue/30 text-forest-700" },
   verified: { label: "Verified", className: "bg-surface-green border-green-100 text-forest-700" },
   rejected: { label: "Rejected", className: "bg-surface border-danger/20 text-danger" },
 };
@@ -18,7 +18,7 @@ interface StatusBadgeProps {
 export function StatusBadge({ status, className }: StatusBadgeProps) {
   const config = statusConfig[status as LedgerState] ?? {
     label: String(status),
-    className: "bg-canvas-subtle text-text-secondary border-border",
+    className: "bg-canvas-subtle text-text-primary border-border",
   };
 
   return (

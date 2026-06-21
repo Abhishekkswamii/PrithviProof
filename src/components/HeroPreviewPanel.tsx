@@ -63,7 +63,7 @@ export function HeroPreviewPanel() {
         <AlertCircle size={16} className="text-amber shrink-0 mt-0.5" aria-hidden="true" />
         <div>
           <p className="text-xs font-semibold text-text-primary">Biggest uncertainty: Food habits</p>
-          <p className="text-xs text-text-secondary mt-0.5">Answering one more question could narrow your range by ~18%.</p>
+          <p className="text-xs text-text-primary mt-0.5">Answering one more question could narrow your range by ~18%.</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export function HeroPreviewPanel() {
       <div className="grid grid-cols-2 gap-3 pt-1 border-t border-border">
         <div>
           <p className="text-xs text-text-secondary">Projected savings</p>
-          <p className="text-sm font-semibold text-amber tabular-nums">{formatEmissions(PREVIEW.projectedSavings, true)}</p>
+          <p className="text-sm font-semibold text-forest-700 tabular-nums">{formatEmissions(PREVIEW.projectedSavings, true)}</p>
         </div>
         <div>
           <p className="text-xs text-text-secondary">Verified savings</p>

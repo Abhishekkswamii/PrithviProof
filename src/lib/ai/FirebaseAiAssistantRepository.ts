@@ -1,5 +1,4 @@
 import { getFirebaseApp } from "../firebase/client";
-import { getAI, getGenerativeModel, GoogleAIBackend, SchemaType } from "firebase/ai";
 import { 
   AiAssistantRepository, 
   ParseActivityResponse, 
@@ -29,9 +28,13 @@ Rules:
 export class FirebaseAiAssistantRepository implements AiAssistantRepository {
   private fallback = new DeterministicFallbackAssistantRepository();
 
-  private getModel(instruction: string, responseMimeType?: string, responseSchema?: Record<string, unknown>) {
+  private async getModel(instruction: string, responseMimeType?: string, responseSchema?: Record<string, unknown>) {
     const app = getFirebaseApp();
     if (!app) throw new Error("Firebase not initialized");
+
+    // Dynamic import keeps firebase/ai out of the initial JS bundle.
+    // It is downloaded only when the user first opens Ask Prithvi or triggers NL parsing.
+    const { getAI, getGenerativeModel, GoogleAIBackend } = await import("firebase/ai");
 
     const ai = getAI(app, {
       backend: new GoogleAIBackend()
@@ -56,7 +59,8 @@ export class FirebaseAiAssistantRepository implements AiAssistantRepository {
     }
 
     try {
-      const model = this.getModel(PARSER_SYSTEM_INSTRUCTION, "application/json", {
+      const { SchemaType } = await import("firebase/ai");
+      const model = await this.getModel(PARSER_SYSTEM_INSTRUCTION, "application/json", {
         type: SchemaType.OBJECT,
         properties: {
           activities: {
@@ -79,8 +83,7 @@ export class FirebaseAiAssistantRepository implements AiAssistantRepository {
         required: ["activities"]
       });
 
-      // Firebase AI doesn't support raw AbortController natively in all web endpoints directly like fetch, 
-      // but we wrap in a promise race to enforce a strict timeout.
+      // Firebase AI doesn't support raw AbortController natively; wrap in a promise race to enforce a strict timeout.
       const responsePromise = model.generateContent(safeText);
       const timeoutPromise = new Promise<never>((_, reject) => 
         setTimeout(() => reject(new Error("Timeout exceeded")), 8000)
@@ -88,9 +91,8 @@ export class FirebaseAiAssistantRepository implements AiAssistantRepository {
 
       const result = await Promise.race([responsePromise, timeoutPromise]);
       const jsonText = result.response.text();
-      
       const parsed = JSON.parse(jsonText);
-      
+
       // Secondary runtime validation via Zod
       return ParseActivityResponseSchema.parse(parsed);
 
@@ -104,14 +106,11 @@ export class FirebaseAiAssistantRepository implements AiAssistantRepository {
     const safePrompt = request.prompt.substring(0, 500).trim();
     
     try {
-      const model = this.getModel(ASSISTANT_SYSTEM_INSTRUCTION);
+      const model = await this.getModel(ASSISTANT_SYSTEM_INSTRUCTION);
       
-      const contextualPrompt = `
-Intent: ${request.intent}
+      const contextualPrompt = `Intent: ${request.intent}
 Context: ${JSON.stringify(request.context)}
-
-User Prompt: ${safePrompt}
-`;
+User Prompt: ${safePrompt}`;
 
       const responsePromise = model.generateContent(contextualPrompt);
       const timeoutPromise = new Promise<never>((_, reject) => 

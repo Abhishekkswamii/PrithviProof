@@ -201,7 +201,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 max-w-2xl">
               <div className="bg-canvas rounded-card border border-border p-4">
                 <p className="text-xs text-text-secondary">Projected savings</p>
-                <p className="text-lg font-bold text-amber tabular-nums">{formatEmissions(120, true)}</p>
+                <p className="text-lg font-bold text-forest-700 tabular-nums">{formatEmissions(120, true)}</p>
                 <p className="text-xs text-text-secondary mt-1">Includes planned and in-progress actions</p>
               </div>
               <div className="bg-surface-green rounded-card border border-green-100 p-4">

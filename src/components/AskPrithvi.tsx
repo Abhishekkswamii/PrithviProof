@@ -67,7 +67,8 @@ export function AskPrithvi() {
       if (p.includes("log") || p.includes("add")) intent = "help-log-activity";
       if (p.includes("project") || p.includes("verif")) intent = "explain-projected-vs-verified";
 
-      const response = await getAiRepository().askAssistant({
+      const repo = await getAiRepository();
+      const response = await repo.askAssistant({
         prompt: userMessage,
         intent,
         context,

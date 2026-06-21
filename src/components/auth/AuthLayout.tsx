@@ -23,10 +23,10 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
             Create an account to save your carbon audit securely and sync across devices when you sign in.
           </p>
         </div>
-        <p className="text-xs text-white/40">&copy; 2026 PrithviProof</p>
+        <p className="text-xs text-white/70">© 2026 PrithviProof</p>
       </aside>
 
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
+      <main id="main-content" className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
           <Link to="/" className="lg:hidden flex items-center justify-center gap-2 text-lg font-bold text-forest-900 mb-8">
             <Leaf size={22} className="text-forest-700" aria-hidden="true" />

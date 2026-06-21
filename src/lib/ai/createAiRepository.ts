@@ -1,14 +1,17 @@
 import { isFirebaseConfigured, shouldUseFirebaseEmulators } from "../firebase/config";
 import { AiAssistantRepository } from "./types";
-import { FirebaseAiAssistantRepository } from "./FirebaseAiAssistantRepository";
-import { MockAiAssistantRepository } from "./MockAiAssistantRepository";
 
-export function getAiRepository(): AiAssistantRepository {
-  // If we are running in a test/emulator environment or Firebase is completely missing, 
-  // mock the AI logic to avoid spamming the live Gemini API.
+/**
+ * Factory for AiAssistantRepository implementations.
+ * Uses dynamic imports so firebase/ai and FirebaseAiAssistantRepository
+ * are never included in the initial JS bundle — they load only when
+ * the user first triggers Ask Prithvi or natural-language activity parsing.
+ */
+export async function getAiRepository(): Promise<AiAssistantRepository> {
   if (!isFirebaseConfigured() || shouldUseFirebaseEmulators()) {
+    const { MockAiAssistantRepository } = await import("./MockAiAssistantRepository");
     return new MockAiAssistantRepository();
   }
-
+  const { FirebaseAiAssistantRepository } = await import("./FirebaseAiAssistantRepository");
   return new FirebaseAiAssistantRepository();
 }

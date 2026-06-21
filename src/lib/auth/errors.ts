@@ -34,12 +34,10 @@ export function mapAuthError(error: unknown): string {
     case "auth/missing-password":
       return "Password is required.";
     default:
-      if (error instanceof Error) {
-        if (code) {
-          return `Error (${code}): ${error.message}`;
-        }
+      // Do not expose internal auth/ codes to the user interface.
+      if (error instanceof Error && error.message && !error.message.includes("auth/")) {
         return error.message;
       }
-      return `Something went wrong. Please try again. Code: ${code || "unknown"}`;
+      return "Something went wrong. Please try again.";
   }
 }
