@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f6f6f6; /* charcoal-50 equivalent */
+  --foreground: #262626; /* charcoal-950 equivalent */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Forcing light theme as requested: "professional light interface" */
+    --background: #f6f6f6;
+    --foreground: #262626;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
