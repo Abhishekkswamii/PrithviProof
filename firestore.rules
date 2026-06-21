@@ -27,18 +27,18 @@ service cloud.firestore {
       allow read: if isOwner(uid);
       allow create: if isOwner(uid)
                     && request.resource.data.uid == uid
-                    && dataHasOnly(['uid', 'displayName', 'email', 'provider', 'onboardingCompleted', 'schemaVersion'])
+                    && dataHasOnly(['uid', 'displayName', 'email', 'provider', 'onboardingCompleted', 'schemaVersion', 'photoURL', 'createdAt', 'updatedAt', 'migrationVersion'])
                     && request.resource.data.schemaVersion is number;
       allow update: if isOwner(uid)
                     && request.resource.data.uid == uid
-                    && dataHasOnly(['uid', 'displayName', 'email', 'provider', 'onboardingCompleted', 'schemaVersion'])
+                    && dataHasOnly(['uid', 'displayName', 'email', 'provider', 'onboardingCompleted', 'schemaVersion', 'photoURL', 'createdAt', 'updatedAt', 'migrationVersion'])
                     && request.resource.data.provider == resource.data.provider;
       allow delete: if false;
 
       match /state/current {
         allow read: if isOwner(uid);
         allow create, update: if isOwner(uid)
-                              && dataHasOnly(['constraints', 'answeredQuestionIds', 'recommendations', 'schemaVersion'])
+                              && dataHasOnly(['constraints', 'answeredQuestionIds', 'recommendations', 'schemaVersion', 'updatedAt', 'migrationVersion'])
                               && request.resource.data.schemaVersion is number
                               // Basic constraint checks
                               && (!('constraints' in request.resource.data) || (
