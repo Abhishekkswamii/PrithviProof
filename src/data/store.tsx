@@ -43,7 +43,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (!isJudgeDemo) return;
 
     try {
-      const storedData = localStorage.getItem("prithviproof_store");
+      if (typeof window === "undefined") return;
+      const storedData = window.localStorage.getItem("prithviproof_store");
       if (storedData) {
         const parsed = JSON.parse(storedData);
         setActivities(parsed.activities || []);
@@ -67,13 +68,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   // Save to local storage
   useEffect(() => {
     if (!isInitialized) return;
-    localStorage.setItem("prithviproof_store", JSON.stringify({
-      activities,
-      constraints,
-      ledger,
-      recommendations,
-      answeredQuestionIds
-    }));
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("prithviproof_store", JSON.stringify({
+        activities,
+        constraints,
+        ledger,
+        recommendations,
+        answeredQuestionIds
+      }));
+    }
   }, [activities, constraints, ledger, recommendations, answeredQuestionIds, isInitialized]);
 
   const estimates = activities.map(calculateEstimate);
