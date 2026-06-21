@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global function: enforce authentication
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Global function: enforce ownership
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Reject unknown fields
+    function hasOnly(allowedFields) {
+      return request.resource.data.keys().hasOnly(allowedFields);
+    }
+    
+    // Reject unknown fields for updates (ignoring unchanged fields is implicit, but we check final data)
+    function dataHasOnly(allowedFields) {
+      return request.resource.data.keys().hasOnly(allowedFields);
+    }
+
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow create: if isOwner(uid)
+                    && request.resource.data.uid == uid
+                    && dataHasOnly(['uid', 'displayName', 'email', 'provider', 'onboardingCompleted', 'schemaVersion'])
+                    && request.resource.data.schemaVersion is number;
+      allow update: if isOwner(uid)
+                    && request.resource.data.uid == uid
+                    && dataHasOnly(['uid', 'displayName', 'email', 'provider', 'onboardingCompleted', 'schemaVersion'])
+                    && request.resource.data.provider == resource.data.provider;
+      allow delete: if false;
+
+      match /state/current {
+        allow read: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+                              && dataHasOnly(['constraints', 'answeredQuestionIds', 'recommendations', 'schemaVersion'])
+                              && request.resource.data.schemaVersion is number
+                              // Basic constraint checks
+                              && (!('constraints' in request.resource.data) || (
+                                  (!('housingType' in request.resource.data.constraints) || request.resource.data.constraints.housingType in ['detached', 'semi-detached', 'apartment', 'shared'])
+                                  && (!('ownership' in request.resource.data.constraints) || request.resource.data.constraints.ownership in ['own', 'rent'])
+                              ));
+      }
+      
+      match /activities/{activityId} {
+        allow read: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+                              && dataHasOnly(['categoryId', 'factorId', 'value', 'unit', 'dataQualityScore', 'notes', 'updatedAt'])
+                              && request.resource.data.value is number
+                              && request.resource.data.value >= 0
+                              && request.resource.data.dataQualityScore is number
+                              && request.resource.data.dataQualityScore >= 0
+                              && request.resource.data.dataQualityScore <= 100;
+        allow delete: if isOwner(uid);
+      }
+      
+      match /ledger/{ledgerId} {
+        allow read: if isOwner(uid);
+        allow create: if isOwner(uid)
+                      && dataHasOnly(['recommendationId', 'title', 'state', 'projectedSavingsKgCO2e', 'verifiedSavingsKgCO2e', 'evidenceUrls', 'updatedAt'])
+                      && request.resource.data.state == 'estimated'
+                      && request.resource.data.projectedSavingsKgCO2e is number
+                      && request.resource.data.verifiedSavingsKgCO2e is number;
+                      
+        allow update: if isOwner(uid)
+                      && dataHasOnly(['recommendationId', 'title', 'state', 'projectedSavingsKgCO2e', 'verifiedSavingsKgCO2e', 'evidenceUrls', 'updatedAt'])
+                      // Protect provenance
+                      && request.resource.data.recommendationId == resource.data.recommendationId
+                      // Check state transitions
+                      && (
+                        // No state change
+                        request.resource.data.state == resource.data.state
+                        ||
+                        // Valid forward transitions
+                        (resource.data.state == 'estimated' && (request.resource.data.state == 'planned' || request.resource.data.state == 'rejected'))
+                        ||
+                        (resource.data.state == 'planned' && (request.resource.data.state == 'in_progress' || request.resource.data.state == 'rejected'))
+                        ||
+                        (resource.data.state == 'in_progress' && (request.resource.data.state == 'verified' || request.resource.data.state == 'rejected'))
+                      );
+        allow delete: if false; // Ledger is immutable regarding deletion
+      }
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

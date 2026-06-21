@@ -1,4 +1,3 @@
-"use client";
 
 import * as React from "react"
 import { ChevronDown, Info } from "lucide-react"
@@ -15,24 +14,25 @@ export function Disclosure({ title, children, className, defaultOpen = false }: 
   const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   return (
-    <div className={cn("border border-charcoal-200 rounded-md bg-charcoal-50", className)}>
+    <div className={cn("border border-border rounded-card bg-canvas-subtle", className)}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-charcoal-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+        className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-text-primary min-h-touch rounded-card"
         aria-expanded={isOpen}
       >
         <span className="flex items-center gap-2">
-          <Info size={16} className="text-teal-600" />
+          <Info size={16} className="text-forest-700" aria-hidden="true" />
           {title}
         </span>
         <ChevronDown
           size={18}
-          className={cn("text-charcoal-500 transition-transform duration-200", isOpen ? "rotate-180" : "")}
+          className={cn("text-text-secondary transition-transform duration-200", isOpen ? "rotate-180" : "")}
+          aria-hidden="true"
         />
       </button>
       {isOpen && (
-        <div className="px-4 pb-4 pt-0 text-sm text-charcoal-700">
+        <div className="px-4 pb-4 pt-0 text-sm text-text-secondary border-t border-border">
           {children}
         </div>
       )}

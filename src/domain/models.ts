@@ -64,7 +64,7 @@ export const AdaptiveQuestion = z.object({
   text: z.string(),
   type: z.enum(["number", "choice", "boolean"]),
   unit: Unit.optional(),
-  options: z.array(z.object({ label: z.string(), value: z.any() })).optional(),
+  options: z.array(z.object({ label: z.string(), value: z.unknown() })).optional(),
   informationGainPotential: z.number().nonnegative(), // Heuristic for how much this reduces uncertainty
 });
 export type AdaptiveQuestion = z.infer<typeof AdaptiveQuestion>;
@@ -75,6 +75,10 @@ export const UserConstraints = z.object({
   housingType: z.enum(["apartment", "house", "shared"]),
   ownership: z.enum(["own", "rent"]),
   hasCar: z.boolean(),
+  location: z.string().optional(),
+  dietRestrictions: z.string().optional(),
+  transportModes: z.array(z.string()).optional(),
+  accessibilityNeeds: z.string().optional(),
 });
 export type UserConstraints = z.infer<typeof UserConstraints>;
 

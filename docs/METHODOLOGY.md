@@ -1,34 +1,18 @@
-# PrithviProof Methodology
+# Methodology
 
-## Emission Factors
-We source emission factors from reputable scientific and government databases:
-- EPA GHG Emission Factors Hub
-- DEFRA Conversion Factors
-- Peer-reviewed literature (e.g., Poore & Nemecek 2018 for food)
+PrithviProof calculates carbon emissions using a standard Factor x Value equation, but adds a layer of **Uncertainty Analysis**.
 
-All factors include:
-- `value`: Baseline emissions per unit (kgCO2e)
-- `uncertaintyPercent`: A static uncertainty bound reflecting the inherent variability of the category (e.g., farming practices for beef).
+## Uncertainty
+Instead of a single number, we provide:
+- **Low**: The best-case scenario.
+- **Central**: The most likely scenario.
+- **High**: The worst-case scenario.
 
-## Unit Normalization
-Pure function conversions ensure inputs match the factor unit before calculation.
-
-## Uncertainty Propagation
-Total relative error is calculated using the Root Sum Square method:
-`sqrt((activityError)^2 + (factorError)^2)`
-
-Data quality scores (0-100) are mapped linearly to activity errors (50% to 0%).
-
-## Adaptive Questioning
-Questions are prioritized based on:
-1. Contribution to total variance (highest variance targeted first).
-2. The intrinsic information gain potential of the question itself.
-
-## Constraint-Aware Recommendations
-Recommendations are filtered using `UserConstraints` (budget, housing, ownership). They are ranked heuristically by maximizing expected reduction and confidence, while minimizing cost and effort.
+Uncertainty is derived from the **Data Quality Score (0-100)** provided by the user. A score of 100 means metered data (e.g. utility bill), which yields 0% uncertainty. A score of 0 means a pure guess, which yields maximum uncertainty.
 
 ## The Evidence Ledger
-The ledger enforces strict state transitions:
-`Estimated -> Planned -> In-Progress -> Verified`
-(Rejection can happen from any state).
-Verified savings only accrue in the `verified` state.
+To avoid greenwashing, users must verify their actions.
+1. `estimated`: The action is suggested.
+2. `planned`: The user commits to the action.
+3. `in_progress`: The user has started the action.
+4. `verified`: The user has provided evidence (e.g., a photo of a smart thermostat installation).

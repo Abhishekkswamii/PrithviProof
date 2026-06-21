@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #F8F6EF;
+  --canvas-subtle: #F2EEE4;
+  --surface: #FFFFFF;
+  --surface-green: #EDF8F0;
+  --forest-950: #102D22;
+  --forest-900: #153B2C;
+  --forest-700: #17653B;
+  --green-500: #36B66A;
+  --green-100: #E5F5E9;
+  --text-primary: #18231E;
+  --text-secondary: #69736D;
+  --border: #D8DED7;
+  --blue: #3D91B8;
+  --teal: #169B91;
+  --amber: #E9B949;
+  --coral: #EF7455;
+  --danger: #B83A3A;
+  --background: var(--canvas);
+  --foreground: var(--text-primary);
+  --radius-card: 8px;
+  --shadow-card: 0 1px 3px rgba(16, 45, 34, 0.06);
+  --focus-ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--green-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--canvas);
+    --foreground: var(--text-primary);
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  *:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .card-radius {
+    border-radius: var(--radius-card);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

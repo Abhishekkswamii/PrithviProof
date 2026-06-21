@@ -1,21 +1,22 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+//} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import Assessment from "../../src/app/assessment/page";
+import Assessment from "../../src/pages/(app)/assessment/page";
 
 const mockMarkQuestionAnswered = vi.fn();
 const mockAddActivity = vi.fn();
 
-// Mock useRouter
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ back: vi.fn(), push: vi.fn() })
 }));
 
-// Mock the store hook with an unanswered question
 vi.mock("@/data/store", () => ({
   useStore: () => ({
     isInitialized: true,
+    storeError: null,
     answeredQuestionIds: [],
     uncertaintyContributions: [],
     activities: [],
@@ -25,22 +26,19 @@ vi.mock("@/data/store", () => ({
 }));
 
 describe("Assessment Component", () => {
-  it("renders the first question from defaultQuestions", () => {
-    render(<Assessment />);
-    // Assuming defaultQuestions[1] is "What best describes your diet?"
-    expect(screen.getByText(/What best describes your diet/i)).toBeInTheDocument();
+  it("renders a question from defaultQuestions", () => {
+    render(<MemoryRouter><Assessment /></MemoryRouter>);
+    expect(screen.getByRole("heading", { name: /What best describes your diet/i })).toBeInTheDocument();
   });
 
   it("submits answer and updates store", async () => {
     const user = userEvent.setup();
-    render(<Assessment />);
-    
-    // Find input (radio button)
+    render(<MemoryRouter><Assessment /></MemoryRouter>);
+
     const label = screen.getByText(/Plant-based/i);
     await user.click(label);
-    
-    // Submit
-    const submitBtn = screen.getByRole("button", { name: /Submit Answer/i });
+
+    const submitBtn = screen.getByRole("button", { name: /Continue/i });
     await user.click(submitBtn);
 
     expect(mockAddActivity).toHaveBeenCalled();
@@ -49,12 +47,12 @@ describe("Assessment Component", () => {
 
   it("skip button calls markQuestionAnswered without adding activity", async () => {
     const user = userEvent.setup();
-    render(<Assessment />);
-    
+    render(<MemoryRouter><Assessment /></MemoryRouter>);
+
     mockAddActivity.mockClear();
     mockMarkQuestionAnswered.mockClear();
 
-    const skipBtn = screen.getByRole("button", { name: /Skip Question/i });
+    const skipBtn = screen.getByRole("button", { name: /^Skip$/i });
     await user.click(skipBtn);
 
     expect(mockAddActivity).not.toHaveBeenCalled();
